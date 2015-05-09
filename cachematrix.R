@@ -27,9 +27,29 @@ cacheSolve <- function(x, ...) {
 	if(!is.null(inv)) {
 		message("getting cached data")
 		return(inv)
+	} else {
+		message("cached data not found, calculating...")
+		data <- x$get()
+		inv <- solve(data, ...)
+		x$setinverse(inv)
+		return(inv)
 	}
-	data <- x$get()
-	inv <- solve(data, ...)
-	x$setinverse(inv)
-	inv
 }
+
+## example usage:
+## > m <- makeCacheMatrix()
+## > m$set(matrix(1:4, 2, 2))
+## > m$get()
+## [,1] [,2]
+## [1,]    1    3
+## [2,]    2    4
+## > cacheSolve(m)
+## cached data not found, calculating...
+## [,1] [,2]
+## [1,]   -2  1.5
+## [2,]    1 -0.5
+## > cacheSolve(m)
+## getting cached data
+## [,1] [,2]
+## [1,]   -2  1.5
+## [2,]    1 -0.5
